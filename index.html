@@ -95,10 +95,10 @@
   nav ul li a{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--muted); text-decoration:none;}
   nav ul li a:hover{color:var(--gold);}
   nav ul li a.active{color:var(--gold); text-shadow:0 0 12px var(--gold-dim);}
-  .nav-social{display:flex; align-items:center; gap:12px;}
-  .nav-social a{display:grid; place-items:center; width:20px; height:20px; color:var(--muted); transition:color 0.25s ease, transform 0.25s ease;}
+  .nav-social{display:flex; align-items:center; gap:16px;}
+  .nav-social a{display:grid; place-items:center; width:28px; height:28px; color:var(--muted); transition:color 0.25s ease, transform 0.25s ease;}
   .nav-social a:hover{color:var(--teal); transform:translateY(-2px); filter:drop-shadow(0 0 8px var(--teal));}
-  .nav-social svg{width:16px; height:16px; fill:currentColor;}
+  .nav-social svg{width:21px; height:21px; fill:currentColor;}
   .nav-social .resume-icon{fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;}
   @media(max-width:820px){ nav .nav-right{gap:14px;} nav ul{gap:14px;} nav ul li:nth-child(n+4){display:none;} }
   @media(max-width:640px){ nav .nav-social{display:none;} }
@@ -175,7 +175,7 @@
   }
 
   /* ---------- ABOUT ---------- */
-  .about-body{font-size:15.5px; color:var(--text); max-width:70ch;}
+  .about-body{font-size:15.5px; color:var(--text); max-width:70ch; margin-left:auto; margin-right:auto; text-align:center;}
   .about-body strong{color:var(--gold); font-weight:600;}
 
   /* ---------- SKILLS ---------- */
@@ -205,23 +205,27 @@
   .skill-card .items{color:var(--text); font-size:14.5px;}
 
   /* ---------- TIMELINE ---------- */
-  .timeline{position:relative; padding-left:26px;}
+  .timeline{position:relative; display:grid; grid-template-columns:1fr 1fr; column-gap:70px; row-gap:44px; padding:0;}
   .timeline::before{
-    content:""; position:absolute; left:5px; top:6px; bottom:6px; width:1px;
+    content:""; position:absolute; left:50%; top:6px; bottom:6px; width:1px;
     background:linear-gradient(var(--gold-dim), var(--line));
   }
-  .t-item{position:relative; padding-bottom:38px;}
+  .t-item{position:relative; padding-bottom:52px;}
+  .t-item:nth-child(odd){grid-column:1; text-align:right; padding-right:34px;}
+  .t-item:nth-child(even){grid-column:2; text-align:left; padding-left:34px; margin-top:44px;}
   .t-item:last-child{padding-bottom:0;}
   .t-item::before{
-    content:""; position:absolute; left:-26px; top:4px; width:9px; height:9px;
+    content:""; position:absolute; top:4px; width:9px; height:9px;
     border-radius:50%; background:var(--bg); border:2px solid var(--gold);
     transition:border-color 0.3s ease, box-shadow 0.3s ease;
   }
+  .t-item:nth-child(odd)::before{right:-6px;}
+  .t-item:nth-child(even)::before{left:-6px;}
   .t-item:hover::before{
     border-color:var(--teal); box-shadow:0 0 8px var(--green-glow);
   }
   .t-item:nth-child(odd)::after{
-    content:""; position:absolute; left:-23.5px; top:8px; width:4px; height:4px;
+    content:""; position:absolute; right:-1.5px; top:8px; width:4px; height:4px;
     border-radius:50%; background:var(--teal); opacity:0;
     animation:dot-blink 5s ease-in-out infinite;
   }
@@ -239,7 +243,21 @@
   .t-item ul{margin:10px 0 0; padding-left:18px; color:var(--muted); font-size:14.5px;}
   .t-item ul li{margin-bottom:5px;}
   .t-item{transition:transform 0.3s ease, border-color 0.3s ease;}
-  .t-item:hover{transform:translateX(6px);}
+  .t-item:hover{transform:translateY(-4px);}
+  .t-item ul{padding-left:18px;}
+  .t-item:nth-child(odd) ul{padding-left:0; padding-right:18px;}
+  @media(max-width:640px){
+    .timeline{display:block; padding-left:26px;}
+    .timeline::before{left:5px;}
+    .t-item,
+    .t-item:nth-child(odd),
+    .t-item:nth-child(even){text-align:left; padding-left:0; padding-right:0; padding-bottom:38px;}
+    .t-item:nth-child(odd)::before,
+    .t-item:nth-child(even)::before{left:-26px; right:auto;}
+    .t-item:nth-child(odd)::after{left:-23.5px; right:auto;}
+    .t-item:nth-child(odd) ul{padding-left:18px; padding-right:0;}
+    .t-item:nth-child(even){margin-top:0;}
+  }
 
   /* ---------- PROJECTS ---------- */
   .project-list{display:flex; flex-direction:column; gap:52px;}
