@@ -1,0 +1,579 @@
+<!DOCTYPE html>                                                                                                     
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sangam Kumar Verma — Embedded Systems Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b1712;
+    --bg-panel: #101d16;
+    --bg-panel-2: #0e1a14;
+    --gold: #d4a054;
+    --gold-dim: rgba(212,160,84,0.35);
+    --teal: #4fbda6;
+    --text: #ece7da;
+    --muted: #8fa396;
+    --line: rgba(212,160,84,0.18);
+    --green-line: rgba(79,189,166,0.28);
+    --green-glow: rgba(79,189,166,0.45);
+    --hole: rgba(143,163,150,0.15);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 1px 1px, var(--hole) 1px, transparent 1px) 0 0/28px 28px,
+      var(--bg);
+    background-attachment:fixed, fixed;
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+  }
+
+  /* Applied only to text nodes */
+  .swipe{
+    opacity:0;
+    transform:translateX(-24px);
+    transition:opacity 0.65s cubic-bezier(.22,.61,.36,1), transform 0.65s cubic-bezier(.22,.61,.36,1);
+    will-change:transform, opacity;
+  }
+  .swipe.in-view{
+    opacity:1;
+    transform:translateX(0);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .swipe{opacity:1; transform:none; transition:none;}
+  }
+
+  ::selection{background:var(--gold); color:#0b1712;}
+  a{color:var(--teal); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 28px;}
+  .lbl{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--gold);
+    letter-spacing:0.02em;
+    display:inline-block;
+  }
+  section{padding:76px 0;}
+  section + section{border-top:1px solid var(--line);}
+  h1,h2,h3{margin:0; font-weight:600;}
+  p{color:var(--muted); max-width:64ch;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(11,23,18,0.88);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:16px; padding-bottom:16px;
+  }
+  nav .chip-id{font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--text); font-weight:500;}
+  nav .chip-id span{color:var(--gold);}
+  nav ul{list-style:none; display:flex; gap:26px; margin:0; padding:0;}
+  nav ul li a{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--muted); text-decoration:none;}
+  nav ul li a:hover{color:var(--gold);}
+  @media(max-width:640px){ nav ul{gap:14px;} nav ul li:nth-child(n+4){display:none;} }
+
+  /* ---------- HERO ---------- */
+  .hero{padding-top:64px; padding-bottom:64px; border-top:none;}
+  .hero-grid{
+    display:grid; grid-template-columns:180px 1fr; gap:48px; align-items:center;
+  }
+  @media(max-width:640px){ .hero-grid{grid-template-columns:1fr; text-align:center;} .hero-grid .chip-wrap{justify-self:center;} }
+
+  .chip-wrap{position:relative; width:180px; height:180px;}
+  .chip-wrap svg{width:100%; height:100%; overflow:visible;}
+  .pulse-dot{
+    animation:travel 3.2s ease-in-out 0.4s 1;
+  }
+  @keyframes travel{
+    0%{ offset-distance:0%; opacity:0;}
+    5%{opacity:1;}
+    95%{opacity:1;}
+    100%{ offset-distance:100%; opacity:0;}
+  }
+  .hero h1{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(28px,4vw,40px);
+    letter-spacing:0.01em;
+    line-height:1.15;
+  }
+  .hero .role{
+    margin-top:10px; color:var(--gold); font-size:16px; font-weight:500;
+  }
+  .hero p.tagline{margin-top:16px; font-size:15.5px; color:var(--muted);}
+  .hero .contact-row{
+    margin-top:22px; display:flex; flex-wrap:wrap; gap:18px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--muted);
+  }
+  @media(max-width:640px){ .hero .contact-row{justify-content:center;} }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:34px;}
+  .sec-head .num{color:var(--teal); font-family:'IBM Plex Mono',monospace; font-size:12.5px;}
+  .sec-head h2{font-size:22px; color:var(--text);}
+  .sec-head .rule{
+    flex:1; height:1px;
+    background:linear-gradient(90deg, var(--green-line), var(--line) 60%, transparent);
+    position:relative; overflow:visible;
+  }
+  .sec-head .rule::after{
+    content:""; position:absolute; top:-1.5px; width:4px; height:4px; border-radius:50%;
+    background:var(--teal); box-shadow:0 0 6px var(--green-glow);
+    animation:rule-travel 4.5s linear infinite;
+    animation-delay:calc(var(--d, 0) * 1s);
+  }
+  @keyframes rule-travel{
+    0%{left:0; opacity:0;}
+    8%{opacity:1;}
+    92%{opacity:1;}
+    100%{left:100%; opacity:0;}
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-body{font-size:15.5px; color:var(--text); max-width:70ch;}
+  .about-body strong{color:var(--gold); font-weight:600;}
+
+  /* ---------- SKILLS ---------- */
+  .skill-board{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;}
+  .skill-card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:16px 18px;
+    position:relative;
+    overflow:hidden;
+    transition:border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .skill-card:hover{
+    border-color:var(--green-line);
+    box-shadow:0 0 0 1px var(--green-line), 0 6px 22px -8px var(--green-glow);
+  }
+  .skill-card::before{
+    content:"";
+    position:absolute; left:14px; top:-1px; width:18px; height:2px; background:var(--bg);
+  }
+  .skill-card .cat{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold);
+    letter-spacing:0.03em; margin-bottom:8px; display:block;
+  }
+  .skill-card .items{color:var(--text); font-size:14.5px;}
+
+  /* ---------- TIMELINE ---------- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{
+    content:""; position:absolute; left:5px; top:6px; bottom:6px; width:1px;
+    background:linear-gradient(var(--gold-dim), var(--line));
+  }
+  .t-item{position:relative; padding-bottom:38px;}
+  .t-item:last-child{padding-bottom:0;}
+  .t-item::before{
+    content:""; position:absolute; left:-26px; top:4px; width:9px; height:9px;
+    border-radius:50%; background:var(--bg); border:2px solid var(--gold);
+    transition:border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .t-item:hover::before{
+    border-color:var(--teal); box-shadow:0 0 8px var(--green-glow);
+  }
+  .t-item:nth-child(odd)::after{
+    content:""; position:absolute; left:-23.5px; top:8px; width:4px; height:4px;
+    border-radius:50%; background:var(--teal); opacity:0;
+    animation:dot-blink 5s ease-in-out infinite;
+  }
+  .t-item:nth-child(1)::after{animation-delay:0.2s;}
+  .t-item:nth-child(2)::after{animation-delay:1.4s;}
+  .t-item:nth-child(3)::after{animation-delay:2.6s;}
+  .t-item:nth-child(4)::after{animation-delay:3.8s;}
+  @keyframes dot-blink{
+    0%,100%{opacity:0;}
+    50%{opacity:0.9;}
+  }
+  .t-item .date{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:4px; display:block;}
+  .t-item h3{font-size:16.5px; color:var(--text); font-weight:600;}
+  .t-item .org{color:var(--teal); font-size:13.5px; margin-top:2px; display:block;}
+  .t-item ul{margin:10px 0 0; padding-left:18px; color:var(--muted); font-size:14.5px;}
+  .t-item ul li{margin-bottom:5px;}
+
+  /* ---------- CERTS / ACHIEVEMENTS ---------- */
+  .card-list{display:flex; flex-direction:column; gap:12px;}
+  .flat-card{
+    display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--line);
+  }
+  .flat-card:last-child{border-bottom:none;}
+  .flat-card .year{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--gold);
+    min-width:64px; flex-shrink:0; padding-top:2px; display:inline-block;
+  }
+  .flat-card .body h4{margin:0 0 4px; font-size:15px; color:var(--text); font-weight:600;}
+  .flat-card .body p{margin:0; font-size:14px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:60px 0 50px; text-align:center;}
+  footer h2{font-size:22px; margin-bottom:10px;}
+  footer p{margin:0 auto 22px; color:var(--muted);}
+  .contact-links{
+    display:flex; justify-content:center; gap:26px; flex-wrap:wrap;
+    font-family:'IBM Plex Mono',monospace; font-size:13.5px;
+  }
+  footer .fine{margin-top:40px; font-size:11.5px; color:var(--muted); opacity:0.6;}
+
+  /* ---------- CIRCUIT BANNER ---------- */
+  .circuit-banner{
+    width:100%;
+    background:
+      radial-gradient(circle at 1px 1px, var(--hole) 1px, transparent 1px) 0 0/28px 28px,
+      linear-gradient(180deg, var(--bg) 0%, #0a1510 100%);
+    border-top:1px solid var(--green-line);
+    overflow:hidden;
+    position:relative;
+  }
+  .circuit-banner svg{display:block; width:100%; height:auto;}
+  .circuit-trace{fill:none; stroke:var(--green-line); stroke-width:1.4;}
+  .circuit-pad{fill:var(--bg); stroke:var(--gold-dim); stroke-width:1.2;}
+  .flow-dot{
+    r:2.6; fill:var(--teal); filter:drop-shadow(0 0 4px var(--green-glow));
+    offset-rotate:0deg; animation-name:flow; animation-timing-function:linear; animation-iteration-count:infinite;
+  }
+  @keyframes flow{
+    0%{offset-distance:0%; opacity:0;}
+    6%{opacity:1;}
+    94%{opacity:1;}
+    100%{offset-distance:100%; opacity:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .flow-dot, .sec-head .rule::after, .t-item::after, .pulse-dot{animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="chip-id">SKV<span>::</span>PORTFOLIO</div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#more">More</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero wrap">
+  <div class="hero-grid">
+    <div class="chip-wrap">
+      <svg viewBox="0 0 180 180">
+        <defs>
+          <path id="lead-top1" d="M65,10 L65,40" />
+          <path id="lead-top2" d="M115,10 L115,40" />
+          <path id="lead-bot1" d="M65,170 L65,140" />
+          <path id="lead-bot2" d="M115,170 L115,140" />
+          <path id="lead-left1" d="M10,65 L40,65" />
+          <path id="lead-left2" d="M10,115 L40,115" />
+          <path id="lead-right1" d="M170,65 L140,65" />
+          <path id="lead-right2" d="M170,115 L140,115" />
+        </defs>
+        <g stroke="var(--gold-dim)" stroke-width="2">
+          <use href="#lead-top1"/><use href="#lead-top2"/>
+          <use href="#lead-bot1"/><use href="#lead-bot2"/>
+          <use href="#lead-left1"/><use href="#lead-left2"/>
+          <use href="#lead-right1"/><use href="#lead-right2"/>
+        </g>
+        <rect x="40" y="40" width="100" height="100" rx="4" fill="#0e1a14" stroke="var(--gold)" stroke-width="1.5"/>
+        <circle cx="54" cy="54" r="3" fill="none" stroke="var(--gold)" stroke-width="1.2"/>
+        <image href="sangam _ph.jpeg" x="41" y="41" width="98" height="98" preserveAspectRatio="xMidYMid slice" style="border-radius:2px;"/>
+        <circle class="pulse-dot" r="3" fill="var(--teal)" style="offset-path:path('M65,10 L65,40 L65,90 L115,90 L115,140');"/>
+      </svg>
+    </div>
+    <div>
+      <span class="lbl swipe">// EMBEDDED SYSTEMS · IOT · ECE</span>
+      <h1 class="swipe" style="margin-top:10px; transition-delay:0.08s;">Sangam Kumar Verma</h1>
+      <div class="role swipe" style="transition-delay:0.16s;">Final-year ECE Engineer — Embedded Systems &amp; IoT</div>
+      <p class="tagline swipe" style="transition-delay:0.24s;">I build the layer where sensors, signals and code meet — from terahertz biosensors to GSM-based safety systems. Based in Ramgarh, Jharkhand, currently at NIST University, Berhampur.</p>
+      <div class="contact-row swipe" style="transition-delay:0.32s;">
+        <span>Ramgarh, Jharkhand, IN</span>
+        <span>+91 84090 33958</span>
+        <a href="mailto:sangamkumarverma84090@gmail.com">sangamkumarverma84090@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num swipe">01</span>
+      <h2 class="swipe">About</h2>
+      <span class="rule"></span>
+    </div>
+    <p class="about-body swipe">
+      I'm a final-year <strong>Electronics and Communication Engineering</strong> student at NIST University, Berhampur, holding a <strong>9.81 CGPA</strong>. My work sits at the intersection of hardware and software — embedded firmware, sensor integration, and debugging systems that have to work in the real world, not just in simulation. I've spent two research internships at NIT Jamshedpur working on analog circuit design and terahertz biosensing, alongside project work in IoT safety systems and satellite imagery analysis. I'm looking for opportunities to bring that hands-on hardware-software fluency into an industry team.
+    </p>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num swipe">02</span>
+      <h2 class="swipe">Technical Skills</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="skill-board">
+      <div class="skill-card">
+        <span class="cat swipe">PROGRAMMING</span>
+        <div class="items swipe" style="transition-delay:0.08s;">C · Python · Verilog HDL · MATLAB</div>
+      </div>
+      <div class="skill-card">
+        <span class="cat swipe">SEMICONDUCTOR / EDA</span>
+        <div class="items swipe" style="transition-delay:0.08s;">Cadence Virtuoso · Xilinx Vivado · CST Studio Suite</div>
+      </div>
+      <div class="skill-card">
+        <span class="cat swipe">HARDWARE &amp; EMBEDDED</span>
+        <div class="items swipe" style="transition-delay:0.08s;">STM32N657 · ESP32 · Arduino · Sensors · GSM/GPS Interfaces</div>
+      </div>
+      <div class="skill-card">
+        <span class="cat swipe">ANALYSIS</span>
+        <div class="items swipe" style="transition-delay:0.08s;">Digital Circuits · Circuit Simulation · Signal Analysis · Debugging</div>
+      </div>
+      <div class="skill-card">
+        <span class="cat swipe">DEVELOPMENT TOOLS</span>
+        <div class="items swipe" style="transition-delay:0.08s;">Arduino IDE · VS Code · Tinkercad · SNAP</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num swipe">03</span>
+      <h2 class="swipe">Experience</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="timeline">
+      <div class="t-item">
+        <span class="date swipe">MAY – JUN 2026</span>
+        <h3 class="swipe">Summer Research Internship</h3>
+        <span class="org swipe">NIT Jamshedpur</span>
+        <ul class="swipe"><li>Worked on skin cancer detection using a terahertz metamaterial absorber.</li></ul>
+      </div>
+      <div class="t-item">
+        <span class="date swipe">MAY – JUN 2025</span>
+        <h3 class="swipe">Summer Research Internship</h3>
+        <span class="org swipe">NIT Jamshedpur</span>
+        <ul class="swipe"><li>Worked on Cadence Virtuoso-based analog and mixed-signal circuit design and simulation.</li></ul>
+      </div>
+      <div class="t-item">
+        <span class="date swipe">2024</span>
+        <h3 class="swipe">Agnirva Space Internship Program</h3>
+        <span class="org swipe">IN-SPACe</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num swipe">04</span>
+      <h2 class="swipe">Projects</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="timeline">
+      <div class="t-item">
+        <span class="date swipe">MAY 2026</span>
+        <h3 class="swipe">Skin Cancer Detection Using Terahertz Metamaterial Absorber</h3>
+        <ul class="swipe">
+          <li>Designed and simulated a terahertz metamaterial absorber in CST Studio Suite for biomedical sensing.</li>
+          <li>Evaluated absorber performance through electromagnetic analysis and optimized sensing characteristics.</li>
+          <li>Applied machine learning to classify skin tissue from terahertz biosensor data.</li>
+        </ul>
+      </div>
+      <div class="t-item">
+        <span class="date swipe">JAN 2026</span>
+        <h3 class="swipe">SAR-based Change Detection using Log-Ratio Analysis</h3>
+        <ul class="swipe">
+          <li>Ran change detection on multi-temporal Sentinel-1 SAR imagery using log-ratio analysis.</li>
+          <li>Applied calibration, speckle filtering, and co-registration for accurate results.</li>
+          <li>Analyzed land surface changes for disaster monitoring and environmental applications.</li>
+        </ul>
+      </div>
+      <div class="t-item">
+        <span class="date swipe">MAR 2025</span>
+        <h3 class="swipe">Automatic Railway Gate System using SMS</h3>
+        <ul class="swipe">
+          <li>Designed an automated railway gate control system using ESP32, a servo motor, and a GSM module.</li>
+          <li>Improved railway crossing safety through SMS-based notification and automation.</li>
+        </ul>
+      </div>
+      <div class="t-item">
+        <span class="date swipe">DEC 2024</span>
+        <h3 class="swipe">Automatic Accident Detection System — Black Box</h3>
+        <ul class="swipe">
+          <li>Built an embedded safety system using ESP32, GPS, GSM, a vibration sensor, MQ2, and DHT11.</li>
+          <li>Implemented real-time accident detection with automatic emergency alert transmission.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="more">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="num swipe">05</span>
+      <h2 class="swipe">Certifications &amp; Training</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="card-list">
+      <div class="flat-card">
+        <span class="year swipe">2026</span>
+        <div class="body">
+          <h4 class="swipe">PwC Advisory Launchpad Program</h4>
+          <p class="swipe">PwC AC (India), Feb – Aug 2026.</p>
+        </div>
+      </div>
+      <div class="flat-card">
+        <span class="year swipe">2026</span>
+        <div class="body">
+          <h4 class="swipe">Faculty Development Program (FCSD-2026)</h4>
+          <p class="swipe">NIT Patna &amp; NIT Jamshedpur — two-week FDP on FPGA-based communication system design, covering FPGA architecture, Verilog HDL, VLSI, Xilinx tools, AI/ML on FPGA, and embedded systems.</p>
+        </div>
+      </div>
+      <div class="flat-card">
+        <span class="year swipe">2023</span>
+        <div class="body">
+          <h4 class="swipe">MOOC — Earth Observation for Climate Action</h4>
+          <p class="swipe">IIRS Dehradun.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:56px;">
+      <span class="num swipe">06</span>
+      <h2 class="swipe">Achievements</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="card-list">
+      <div class="flat-card">
+        <span class="year swipe">2026</span>
+        <div class="body">
+          <h4 class="swipe">TRON Programming Contest, Japan</h4>
+          <p class="swipe">Selected and shortlisted after initial screening for the development phase, organized by the TRON Forum and STMicroelectronics.</p>
+        </div>
+      </div>
+      <div class="flat-card">
+        <span class="year swipe">2023</span>
+        <div class="body">
+          <h4 class="swipe">Winner — Inter-College Technical Paper Presentation</h4>
+          <p class="swipe">RIT Berhampur.</p>
+        </div>
+      </div>
+      <div class="flat-card">
+        <span class="year swipe">2023</span>
+        <div class="body">
+          <h4 class="swipe">Winner — Intra-College Hardware Model Presentation</h4>
+          <p class="swipe">REC Club, NIST.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:56px;">
+      <span class="num swipe">07</span>
+      <h2 class="swipe">Volunteer Experience</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="card-list">
+      <div class="flat-card">
+        <span class="year swipe">2025–26</span>
+        <div class="body">
+          <h4 class="swipe">President, Renewable Energy Club — NIST</h4>
+          <p class="swipe">Led initiatives on renewable energy and embedded systems, coordinating technical projects and student activities.</p>
+        </div>
+      </div>
+      <div class="flat-card">
+        <span class="year swipe">2026</span>
+        <div class="body">
+          <h4 class="swipe">IoT Workshop &amp; Technical Event Organizer</h4>
+          <p class="swipe">Hosted a hands-on IoT and embedded systems session for 150+ students.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <span class="lbl swipe">// GET IN TOUCH</span>
+    <h2 class="swipe" style="margin-top:10px; transition-delay:0.08s;">Let's build something.</h2>
+    <p class="swipe" style="transition-delay:0.16s; margin-left:auto; margin-right:auto;">Open to embedded systems, IoT, and hardware-software integration roles.</p>
+    <div class="contact-links swipe" style="transition-delay:0.24s;">
+      <a href="mailto:sangamkumarverma84090@gmail.com">sangamkumarverma84090@gmail.com</a>
+      <span style="color:var(--muted);">+91 84090 33958</span>
+      <span style="color:var(--muted);">Ramgarh, Jharkhand, India</span>
+    </div>
+    <div class="fine mono swipe" style="transition-delay:0.32s;">BOARD REV. 2026 · SKV-PORTFOLIO</div>
+  </div>
+</footer>
+
+<div class="circuit-banner">
+  <svg viewBox="0 0 1200 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="circuit-trace" d="M0,28 L210,28 L240,58 L470,58 L500,28 L760,28 L790,88 L1200,88" />
+    <path class="circuit-trace" d="M0,88 L150,88 L180,48 L430,48 L460,108 L720,108 L750,38 L1200,38" />
+    <path class="circuit-trace" d="M0,110 L300,110 L330,20 L580,20 L610,100 L880,100 L910,68 L1200,68" />
+    <path class="circuit-trace" d="M0,64 L120,64 L150,118 L360,118 L390,64 L650,64 L680,10 L940,10 L970,64 L1200,64" />
+
+    <circle class="circuit-pad" cx="240" cy="58" r="4.5"/>
+    <circle class="circuit-pad" cx="500" cy="28" r="4.5"/>
+    <circle class="circuit-pad" cx="790" cy="88" r="4.5"/>
+    <circle class="circuit-pad" cx="180" cy="48" r="4.5"/>
+    <circle class="circuit-pad" cx="460" cy="108" r="4.5"/>
+    <circle class="circuit-pad" cx="750" cy="38" r="4.5"/>
+    <circle class="circuit-pad" cx="330" cy="20" r="4.5"/>
+    <circle class="circuit-pad" cx="610" cy="100" r="4.5"/>
+    <circle class="circuit-pad" cx="910" cy="68" r="4.5"/>
+    <rect class="circuit-pad" x="672" y="2" width="16" height="16" rx="2"/>
+
+    <circle class="flow-dot" style="offset-path:path('M0,28 L210,28 L240,58 L470,58 L500,28 L760,28 L790,88 L1200,88'); animation-duration:7s; animation-delay:0s;"/>
+    <circle class="flow-dot" style="offset-path:path('M0,28 L210,28 L240,58 L470,58 L500,28 L760,28 L790,88 L1200,88'); animation-duration:7s; animation-delay:3.5s;"/>
+    <circle class="flow-dot" style="offset-path:path('M0,88 L150,88 L180,48 L430,48 L460,108 L720,108 L750,38 L1200,38'); animation-duration:8.5s; animation-delay:1.2s;"/>
+    <circle class="flow-dot" style="offset-path:path('M0,88 L150,88 L180,48 L430,48 L460,108 L720,108 L750,38 L1200,38'); animation-duration:8.5s; animation-delay:5.5s;"/>
+    <circle class="flow-dot" style="offset-path:path('M0,110 L300,110 L330,20 L580,20 L610,100 L880,100 L910,68 L1200,68'); animation-duration:9.5s; animation-delay:2.4s;"/>
+    <circle class="flow-dot" style="offset-path:path('M0,64 L120,64 L150,118 L360,118 L390,64 L650,64 L680,10 L940,10 L970,64 L1200,64'); animation-duration:10s; animation-delay:0.8s;"/>
+    <circle class="flow-dot" style="offset-path:path('M0,64 L120,64 L150,118 L360,118 L390,64 L650,64 L680,10 L940,10 L970,64 L1200,64'); animation-duration:10s; animation-delay:5.8s;"/>
+  </svg>
+</div>
+
+<script>
+  // Hero text reveals on load
+  document.querySelectorAll('.hero .swipe').forEach(el => el.classList.add('in-view'));
+
+  // Reveal only text elements on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -4% 0px' });
+
+  document.querySelectorAll('.swipe:not(.hero .swipe)').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
