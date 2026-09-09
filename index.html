@@ -27,13 +27,16 @@
   body{
     margin:0;
     background:
-      radial-gradient(circle at 1px 1px, var(--hole) 1px, transparent 1px) 0 0/28px 28px,
-      var(--bg);
-    background-attachment:fixed, fixed;
+      radial-gradient(circle at 72% 45%, rgba(0,190,220,0.12), transparent 28%),
+      radial-gradient(circle at 28% 62%, rgba(0,110,160,0.1), transparent 32%),
+      #030a10;
+    background-attachment:fixed;
     color:var(--text);
     font-family:'IBM Plex Sans', sans-serif;
     line-height:1.6;
   }
+  #network-bg{position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:0.9;}
+  body > *:not(#network-bg){position:relative; z-index:1;}
 
   /* Applied only to text nodes */
   .swipe{
@@ -48,6 +51,7 @@
   }
   @media (prefers-reduced-motion: reduce){
     .swipe{opacity:1; transform:none; transition:none;}
+    #network-bg{display:none;}
   }
 
   ::selection{background:var(--gold); color:#0b1712;}
@@ -63,7 +67,7 @@
     display:inline-block;
   }
   section{padding:76px 0;}
-  section + section{border-top:1px solid var(--line);}
+  section + section{border-top:none;}
   h1,h2,h3{margin:0; font-weight:600;}
   p{color:var(--muted); max-width:64ch;}
 
@@ -74,6 +78,12 @@
     backdrop-filter:blur(6px);
     border-bottom:1px solid var(--line);
   }
+  .scroll-progress{
+    position:absolute; left:0; bottom:-1px; width:100%; height:2px;
+    background:linear-gradient(90deg, var(--teal), var(--gold));
+    transform:scaleX(0); transform-origin:left; z-index:2;
+    box-shadow:0 0 10px var(--green-glow);
+  }
   nav .wrap{
     display:flex; align-items:center; justify-content:space-between;
     padding-top:16px; padding-bottom:16px;
@@ -83,17 +93,19 @@
   nav ul{list-style:none; display:flex; gap:26px; margin:0; padding:0;}
   nav ul li a{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--muted); text-decoration:none;}
   nav ul li a:hover{color:var(--gold);}
+  nav ul li a.active{color:var(--gold); text-shadow:0 0 12px var(--gold-dim);}
   @media(max-width:640px){ nav ul{gap:14px;} nav ul li:nth-child(n+4){display:none;} }
 
   /* ---------- HERO ---------- */
   .hero{padding-top:64px; padding-bottom:64px; border-top:none;}
   .hero-grid{
-    display:grid; grid-template-columns:180px 1fr; gap:48px; align-items:center;
+    display:grid; grid-template-columns:240px minmax(0, 1fr); gap:64px; align-items:center;
   }
   @media(max-width:640px){ .hero-grid{grid-template-columns:1fr; text-align:center;} .hero-grid .chip-wrap{justify-self:center;} }
 
-  .chip-wrap{position:relative; width:180px; height:180px;}
+  .chip-wrap{position:relative; width:240px; height:240px;}
   .chip-wrap svg{width:100%; height:100%; overflow:visible;}
+  .profile-photo{display:block; width:240px; height:240px; object-fit:cover; border:2px solid var(--gold); border-radius:50%; box-shadow:0 0 0 8px rgba(3,10,16,0.55), 0 0 28px rgba(0,217,232,0.28);}
   .pulse-dot{
     animation:travel 3.2s ease-in-out 0.4s 1;
   }
@@ -117,10 +129,14 @@
     margin-top:22px; display:flex; flex-wrap:wrap; gap:18px;
     font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--muted);
   }
+  .hero-meta{display:flex; align-items:center; gap:10px; margin-top:18px; color:var(--teal); font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.04em;}
+  .status-dot{width:7px; height:7px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 0 var(--green-glow); animation:status-pulse 1.8s infinite;}
+  @keyframes status-pulse{70%{box-shadow:0 0 0 7px transparent;} 100%{box-shadow:0 0 0 0 transparent;}}
   @media(max-width:640px){ .hero .contact-row{justify-content:center;} }
 
   /* ---------- SECTION HEADERS ---------- */
-  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:34px;}
+  .sec-head{display:flex; align-items:baseline; gap:0; margin-bottom:34px;}
+  .sec-head .num,.sec-head .rule{display:none;}
   .sec-head .num{color:var(--teal); font-family:'IBM Plex Mono',monospace; font-size:12.5px;}
   .sec-head h2{font-size:22px; color:var(--text);}
   .sec-head .rule{
@@ -148,7 +164,7 @@
   /* ---------- SKILLS ---------- */
   .skill-board{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;}
   .skill-card{
-    background:var(--bg-panel);
+    background:transparent;
     border:1px solid var(--line);
     border-radius:3px;
     padding:16px 18px;
@@ -160,9 +176,10 @@
     border-color:var(--green-line);
     box-shadow:0 0 0 1px var(--green-line), 0 6px 22px -8px var(--green-glow);
   }
+  .skill-card::after{content:""; position:absolute; right:-28px; bottom:-28px; width:70px; height:70px; border:1px solid var(--green-line); border-radius:50%; opacity:0.35; transition:transform 0.4s ease, opacity 0.4s ease;}
+  .skill-card:hover::after{transform:scale(1.7); opacity:0.8;}
   .skill-card::before{
-    content:"";
-    position:absolute; left:14px; top:-1px; width:18px; height:2px; background:var(--bg);
+    content:none;
   }
   .skill-card .cat{
     font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold);
@@ -204,6 +221,8 @@
   .t-item .org{color:var(--teal); font-size:13.5px; margin-top:2px; display:block;}
   .t-item ul{margin:10px 0 0; padding-left:18px; color:var(--muted); font-size:14.5px;}
   .t-item ul li{margin-bottom:5px;}
+  .t-item{transition:transform 0.3s ease, border-color 0.3s ease;}
+  .t-item:hover{transform:translateX(6px);}
 
   /* ---------- CERTS / ACHIEVEMENTS ---------- */
   .card-list{display:flex; flex-direction:column; gap:12px;}
@@ -252,13 +271,16 @@
     100%{offset-distance:100%; opacity:0;}
   }
   @media (prefers-reduced-motion: reduce){
-    .flow-dot, .sec-head .rule::after, .t-item::after, .pulse-dot{animation:none !important;}
+    .flow-dot, .sec-head .rule::after, .t-item::after, .pulse-dot, .status-dot{animation:none !important;}
   }
 </style>
 </head>
 <body>
 
+<canvas id="network-bg" aria-hidden="true"></canvas>
+
 <nav>
+  <span class="scroll-progress" aria-hidden="true"></span>
   <div class="wrap">
     <div class="chip-id">SKV<span>::</span>PORTFOLIO</div>
     <ul>
@@ -275,28 +297,7 @@
 <section class="hero wrap">
   <div class="hero-grid">
     <div class="chip-wrap">
-      <svg viewBox="0 0 180 180">
-        <defs>
-          <path id="lead-top1" d="M65,10 L65,40" />
-          <path id="lead-top2" d="M115,10 L115,40" />
-          <path id="lead-bot1" d="M65,170 L65,140" />
-          <path id="lead-bot2" d="M115,170 L115,140" />
-          <path id="lead-left1" d="M10,65 L40,65" />
-          <path id="lead-left2" d="M10,115 L40,115" />
-          <path id="lead-right1" d="M170,65 L140,65" />
-          <path id="lead-right2" d="M170,115 L140,115" />
-        </defs>
-        <g stroke="var(--gold-dim)" stroke-width="2">
-          <use href="#lead-top1"/><use href="#lead-top2"/>
-          <use href="#lead-bot1"/><use href="#lead-bot2"/>
-          <use href="#lead-left1"/><use href="#lead-left2"/>
-          <use href="#lead-right1"/><use href="#lead-right2"/>
-        </g>
-        <rect x="40" y="40" width="100" height="100" rx="4" fill="#0e1a14" stroke="var(--gold)" stroke-width="1.5"/>
-        <circle cx="54" cy="54" r="3" fill="none" stroke="var(--gold)" stroke-width="1.2"/>
-        <image href="sangam _ph.jpeg" x="41" y="41" width="98" height="98" preserveAspectRatio="xMidYMid slice" style="border-radius:2px;"/>
-        <circle class="pulse-dot" r="3" fill="var(--teal)" style="offset-path:path('M65,10 L65,40 L65,90 L115,90 L115,140');"/>
-      </svg>
+      <img class="profile-photo" src="sangam _ph.jpeg" alt="Portrait of Sangam Kumar Verma">
     </div>
     <div>
       <span class="lbl swipe">// EMBEDDED SYSTEMS · IOT · ECE</span>
@@ -304,10 +305,11 @@
       <div class="role swipe" style="transition-delay:0.16s;">Final-year ECE Engineer — Embedded Systems &amp; IoT</div>
       <p class="tagline swipe" style="transition-delay:0.24s;">I build the layer where sensors, signals and code meet — from terahertz biosensors to GSM-based safety systems. Based in Ramgarh, Jharkhand, currently at NIST University, Berhampur.</p>
       <div class="contact-row swipe" style="transition-delay:0.32s;">
-        <span>Ramgarh, Jharkhand, IN</span>
-        <span>+91 84090 33958</span>
+        <!-- <span>Ramgarh, Jharkhand, IN</span>
+        <span>+91 84090 33958</span> -->
         <a href="mailto:sangamkumarverma84090@gmail.com">sangamkumarverma84090@gmail.com</a>
       </div>
+      <div class="hero-meta swipe" style="transition-delay:0.4s;"><span class="status-dot"></span>AVAILABLE FOR EMBEDDED SYSTEMS ROLES</div>
     </div>
   </div>
 </section>
@@ -573,6 +575,114 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -4% 0px' });
 
   document.querySelectorAll('.swipe:not(.hero .swipe)').forEach(el => io.observe(el));
+
+  const progress = document.querySelector('.scroll-progress');
+  const navLinks = [...document.querySelectorAll('nav a[href^="#"]')];
+  const sections = navLinks
+    .map(link => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+
+  function updatePageState(){
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progressValue = scrollable > 0 ? window.scrollY / scrollable : 0;
+    progress.style.transform = `scaleX(${progressValue})`;
+
+    const current = sections.reduce((visible, section) => {
+      return section.getBoundingClientRect().top <= 150 ? section : visible;
+    }, sections[0]);
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === `#${current.id}`);
+    });
+  }
+
+  window.addEventListener('scroll', updatePageState, {passive:true});
+  window.addEventListener('resize', updatePageState);
+  updatePageState();
+
+  document.querySelectorAll('.skill-card, .t-item, .flat-card').forEach((item, index) => {
+    item.style.transitionDelay = `${(index % 4) * 60}ms`;
+    item.classList.add('swipe');
+    io.observe(item);
+  });
+
+  const networkCanvas = document.getElementById('network-bg');
+  const networkContext = networkCanvas.getContext('2d');
+  let networkWidth = 0;
+  let networkHeight = 0;
+  let networkStars = [];
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resizeNetwork(){
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    networkWidth = window.innerWidth;
+    networkHeight = window.innerHeight;
+    networkCanvas.width = networkWidth * pixelRatio;
+    networkCanvas.height = networkHeight * pixelRatio;
+    networkCanvas.style.width = `${networkWidth}px`;
+    networkCanvas.style.height = `${networkHeight}px`;
+    networkContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    networkStars = Array.from({length:Math.floor(networkWidth / 18)}, () => ({
+      x:Math.random() * networkWidth,
+      y:Math.random() * networkHeight * 0.7,
+      radius:Math.random() * 1.4 + 0.3,
+      phase:Math.random() * Math.PI * 2
+    }));
+  }
+
+  function drawNetwork(time = 0){
+    networkContext.clearRect(0, 0, networkWidth, networkHeight);
+    networkStars.forEach(star => {
+      const twinkle = 0.25 + (Math.sin(time * 0.0015 + star.phase) + 1) * 0.25;
+      networkContext.fillStyle = `rgba(42, 214, 235, ${twinkle})`;
+      networkContext.beginPath();
+      networkContext.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      networkContext.fill();
+    });
+
+    const columns = Math.ceil(networkWidth / 30) + 1;
+    const rows = 13;
+    const points = Array.from({length:rows}, (_, row) => Array.from({length:columns}, (_, column) => {
+      const normalizedX = column / (columns - 1);
+      const crest = Math.sin(normalizedX * Math.PI * 3.3 + time * 0.00055) * networkHeight * 0.07;
+      const secondaryWave = Math.sin(normalizedX * Math.PI * 7 - time * 0.00035 + row) * networkHeight * 0.025;
+      const depth = Math.sin(row * 0.8 + normalizedX * 4) * networkHeight * 0.018;
+      return {
+        x:column * networkWidth / (columns - 1),
+        y:networkHeight * 0.58 + (row - rows / 2) * networkHeight * 0.018 + crest + secondaryWave + depth
+      };
+    }));
+
+    networkContext.lineWidth = 0.55;
+    points.forEach((row, rowIndex) => row.forEach((point, columnIndex) => {
+      const next = row[columnIndex + 1];
+      const below = points[rowIndex + 1]?.[columnIndex];
+      const diagonal = points[rowIndex + 1]?.[columnIndex + 1];
+      [next, below, diagonal].forEach(target => {
+        if (!target) return;
+        networkContext.strokeStyle = `rgba(31, 203, 225, ${0.16 + rowIndex / rows * 0.16})`;
+        networkContext.beginPath();
+        networkContext.moveTo(point.x, point.y);
+        networkContext.lineTo(target.x, target.y);
+        networkContext.stroke();
+      });
+      if ((columnIndex + rowIndex * 3) % 11 === 0){
+        networkContext.fillStyle = '#55e9f0';
+        networkContext.shadowColor = '#00d9e8';
+        networkContext.shadowBlur = 12;
+        networkContext.beginPath();
+        networkContext.arc(point.x, point.y, 1.8, 0, Math.PI * 2);
+        networkContext.fill();
+        networkContext.shadowBlur = 0;
+      }
+    }));
+
+    networkContext.shadowBlur = 0;
+    if (!prefersReducedMotion) requestAnimationFrame(drawNetwork);
+  }
+
+  resizeNetwork();
+  drawNetwork();
+  window.addEventListener('resize', resizeNetwork);
 </script>
 
 </body>
